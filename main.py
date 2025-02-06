@@ -53,8 +53,8 @@ def main():
     all_models = {**baseline_models, **tuned_model}
     all_metrics = {**baseline_metrics, **tuned_metrics}
 
-    # Find the best model based on F1 score
-    best_model_name = max(all_metrics, key=lambda k: all_metrics[k]["F1"])
+    # Find the best model based on F1 and Accuracy score
+    best_model_name = max(all_metrics, key=lambda k: sum(all_metrics[k][m] for m in ["F1", "Accuracy"]))
     best_model = all_models[best_model_name]
     logging.info(f"Best Model Found: {best_model_name}")
 
