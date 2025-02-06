@@ -3,11 +3,11 @@ target_column: lung_cancer
 val_test_size: 0.2
 val_size: 0.5
 param_grid:
-  classifier__iterations:            [100, 1000]
-  classifier__depth:                 [4, 16]
-  classifier__learning_rate:         [0.01, 0.3]
-  classifier__loss_function:         ['Logloss', 'RMSE']
-  classifier__l2_leaf_reg:           [1, 10]
+    classifier__iterations:            [100, 1000]
+    classifier__depth:                 [4, 16]
+    classifier__learning_rate:         [0.01, 0.3]
+    classifier__loss_function:         ['Logloss', 'RMSE']
+    classifier__l2_leaf_reg:           [1, 10]
 cv: 5
 scoring: 'f1'
 numerical_features:

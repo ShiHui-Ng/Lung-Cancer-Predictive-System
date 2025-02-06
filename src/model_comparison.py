@@ -154,7 +154,7 @@ print("")
 
 # Random Forest Model
 model_training(rf_pipeline, "Random Forest Validation Set Metrics", "Random Forest Training Set Metrics")
-
+'''
 model = Pipeline(steps=[
     ('preprocessor', preprocessor),
     ('catboost', CatBoostClassifier(
@@ -190,7 +190,7 @@ print("F1 Score:", f1_score(y_test, y_pred))
 print("Precision:", precision_score(y_test, y_pred))
 print("Recall:", recall_score(y_test, y_pred))
 print("ROC AUC Score:", roc_auc_score(y_test, y_pred_proba))
-
+'''
 '''
 depth: 4,
 iterations: 100

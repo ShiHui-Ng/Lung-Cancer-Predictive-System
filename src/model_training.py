@@ -130,13 +130,13 @@ class ModelTraining:
         Tuple[Dict[str, Pipeline], Dict[str, Dict[str, float]]]: A tuple containing the tuned pipelines and their evaluation metrics.
         """
         logging.info("Starting hyperparameter tuning.")
-        tuned_models = {}
+        tuned_model = {}
         tuned_metrics = {}
         param_grid = self.config["param_grid"]
         cv = self.config["cv"]
         scoring = self.config["scoring"]
 
-        model = {'catboost_tuned': CatBoostClassifier()}
+        model = {'catboost_tuned': CatBoostClassifier(verbose=0, random_state=42)}
 
         for model_name, model in model.items():
             pipeline = Pipeline(
@@ -146,13 +146,13 @@ class ModelTraining:
                 pipeline, param_grid, cv=cv, scoring=scoring, n_jobs=-1
             )
             grid_search.fit(X_train, y_train)
-            tuned_models[model_name] = grid_search.best_estimator_
+            tuned_model[model_name] = grid_search.best_estimator_
             tuned_metrics[model_name] = self._evaluate_model(
-                tuned_models[model_name], X_val, y_val, model_name + " (tuned)"
+                tuned_model[model_name], X_val, y_val, model_name + " (tuned)"
             )
 
         logging.info("Hyperparameter tuning completed.")
-        return tuned_models, tuned_metrics
+        return tuned_model, tuned_metrics
     
     def evaluate_final_model(
             self, model: Pipeline, X_test: pd.DataFrame, y_test: pd.Series, model_name: str
