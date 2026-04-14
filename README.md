@@ -52,9 +52,7 @@
 | smoking_duration       | Feature engineered with features 'Stop Smoking' and 'Start Smoking'.            |
 | Last Weight            | Dropped after feature engineering.                                              |
 | Current Weight         | Dropped after feature engineering                                               |
-##### Below are some code snippets of the data cleaning process
-![image](https://github.com/user-attachments/assets/58d54185-5d12-4127-a401-441432aa5244)
-![image](https://github.com/user-attachments/assets/95cc9215-38bb-4b0a-acc2-a92bbeea99fa)
+
 
 * Model selection
 #
