@@ -30,7 +30,7 @@ G --> H[Save Model with Joblib]
 H --> I[FastAPI Inference API]
 I --> J[Prediction Endpoint /predict]
 '''
-## <img src="https://www.shutterstock.com/shutterstock/videos/27735403/thumb/1.jpg" width="50> Tech Stack
+## <img src="https://www.shutterstock.com/shutterstock/videos/27735403/thumb/1.jpg" width="50"> Tech Stack
 * Python 3.11
 * Scikit-learn
 * CatBoost / XGBoost / Random Forest
@@ -57,7 +57,7 @@ I --> J[Prediction Endpoint /predict]
 * Real-time prediction endpoint
 * Model persistence using Joblib
 ##
-## <img src="https://thumb.r2.moele.me/t/31528/31518027/a-0120.jpg" width="50> Model Performance
+## <img src="https://thumb.r2.moele.me/t/31528/31518027/a-0120.jpg" width="50"> Model Performance
 ##
 ### Baseline Models (Validation Set)
 #
@@ -82,7 +82,7 @@ I --> J[Prediction Endpoint /predict]
 * Weight change is one of the most influential features
 * Genetic markers show strong predictive signal
 * Age distribution is skewed towards older population (60+)
-### <img src="https://cdn.pixabay.com/animation/2023/04/28/18/34/18-34-10-554_512.gif" width="50> Note: Observations are dataset-specific and not medical conclusions
+### <img src="https://cdn.pixabay.com/animation/2023/04/28/18/34/18-34-10-554_512.gif" width="50"> Note: Observations are dataset-specific and not medical conclusions
 
 ## <img src="https://media3.giphy.com/media/v1.Y2lkPTZjMDliOTUybjViM3MxYzQ5aG53bmE1MWdmazZiem4yczBvYXBuNjJ6dnVqMGg2ZCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Swa7CpzF7xTwwK6VWQ/source.gif" width="50"> Feature Engineering
 ##
