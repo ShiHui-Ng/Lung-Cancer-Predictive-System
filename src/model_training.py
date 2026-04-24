@@ -210,6 +210,7 @@ class ModelTraining:
         for metric_name, metric_value in metrics.items():
             logging.info(f"{metric_name}: {metric_value}")
         return metrics
+<<<<<<< HEAD
     
     def run(self, df: pd.DataFrame):
         logging.info("Starting ML training pipeline...")
@@ -250,3 +251,5 @@ class ModelTraining:
             "metrics": final_metrics,
             "name": best_model_name
         }
+=======
+>>>>>>> 4c0272762fd503b86a8a69d49046228cb2f5c054

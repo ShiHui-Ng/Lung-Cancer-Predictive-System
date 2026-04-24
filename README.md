@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # <img src="https://img.freepik.com/free-vector/human-lungs-with-face-expression_1308-126846.jpg" width="50"> Lung Cancer Risk Prediction System.
 ## <img src="https://img.freepik.com/premium-vector/cartoon-magnifying-glass-icon-vector-illustration_1138841-30500.jpg" width="50"> Overview
 ### This project is a machine learning system designed to predict lung cancer risk based on clinical and lifestyle-related features.
