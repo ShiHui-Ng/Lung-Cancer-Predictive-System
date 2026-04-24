@@ -1,9 +1,7 @@
-# Standard library imports
-import logging 
+import logging
+import os
 from typing import Any, Dict, Tuple
 
-# Related third-party imports
-import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, StandardScaler
 from sklearn.ensemble import RandomForestClassifier
@@ -13,19 +11,16 @@ from catboost import CatBoostClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import precision_score, accuracy_score, recall_score, f1_score, roc_auc_score
 from sklearn.pipeline import Pipeline
+from sklearn.utils._testing import ignore_warnings
+import joblib
+import pandas as pd
+import yaml
+
+from data_prep import DataPrep
+
+logging.basicConfig(level=logging.INFO)
 
 class ModelTraining:
-    """
-    A class used to train and evaluate machine learning models on HDB resale prices data.
-
-    Attributes:
-    -----------
-    config : Dict[str, Any]
-        Configuration dictionary containing parameters for model training and evaluation.
-    preprocessor : sklearn.compose.ColumnTransformer
-        A preprocessor pipieline for transforming numerical, nominal and ordinal features.
-    """
-
     def __init__(self, config: Dict[str, Any], preprocesor: ColumnTransformer):
         """
         Initialize the ModelTraining class with configuration and preprocessor.
@@ -57,13 +52,13 @@ class ModelTraining:
         logging.info("Starting data splitting.")
         X = df.drop(columns=self.config["target_column"])
         y = df[self.config["target_column"]]
-        X_train, X_temp, y_train, y_temp = train_test_split(
+        X_temp, X_test, y_temp, y_test = train_test_split(
             X, y, test_size=self.config["val_test_size"] , random_state=42
         )
-        X_val, X_test, y_val, y_test = train_test_split(
-            X_temp, y_temp, test_size=self.config["val_size"], random_state=42
+        X_train, X_val, y_train, y_val = train_test_split(
+            X_temp, y_temp, test_size=0.125, random_state=42
         )
-        logging.info("Data splitted into train, validation and test sets.")
+        logging.info("Data splitted into training(70%), validation(10%) and testing(20%) sets.")
         return X_train, X_val, X_test, y_train, y_val, y_test
     
     def train_and_evaluate_baseline_models(
@@ -103,7 +98,7 @@ class ModelTraining:
             )
             pipeline.fit(X_train, y_train)
             pipelines[model_name] = pipeline
-            metrics[model_name] = self._evaluate_model(
+            metrics[model_name] = self.evaluate_validation(
                 pipeline, X_val, y_val, model_name
             )
         return pipelines, metrics
@@ -147,14 +142,14 @@ class ModelTraining:
             )
             grid_search.fit(X_train, y_train)
             tuned_model[model_name] = grid_search.best_estimator_
-            tuned_metrics[model_name] = self._evaluate_model(
+            tuned_metrics[model_name] = self.evaluate_validation(
                 tuned_model[model_name], X_val, y_val, model_name + " (tuned)"
             )
 
         logging.info("Hyperparameter tuning completed.")
         return tuned_model, tuned_metrics
     
-    def evaluate_final_model(
+    def evaluate_test_set(
             self, model: Pipeline, X_test: pd.DataFrame, y_test: pd.Series, model_name: str
     ) -> Dict[str, float]:
         """
@@ -185,7 +180,7 @@ class ModelTraining:
             logging.info(f"{metric_name}: {metric_value}")
         return metrics
     
-    def _evaluate_model(
+    def evaluate_validation(
             self, model: Pipeline, X_val: pd.DataFrame, y_val: pd.Series, model_name: str
     ) -> Dict[str, float]:
         """
@@ -215,3 +210,43 @@ class ModelTraining:
         for metric_name, metric_value in metrics.items():
             logging.info(f"{metric_name}: {metric_value}")
         return metrics
+    
+    def run(self, df: pd.DataFrame):
+        logging.info("Starting ML training pipeline...")
+
+        # Split data
+        X_train, X_val, X_test, y_train, y_val, y_test = self.split_data(df)
+
+        # Baseline models
+        baseline_models, baseline_metrics = self.train_and_evaluate_baseline_models(X_train, y_train, X_val, y_val)
+
+        # Tuned models
+        tuned_models, tuned_metrics = self.train_and_evaluate_tuned_models(X_train, y_train, X_val, y_val)
+
+        # Combine results
+        all_models = {**baseline_models, **tuned_models}
+        all_metrics = {**baseline_metrics, **tuned_metrics}
+
+        # Select best model
+        best_model_name = max(
+            all_metrics,
+            key=lambda k: (
+                0.7 * all_metrics[k]["F1"] +
+                0.3 * all_metrics[k]["Accuracy"])
+        )
+ 
+        best_model = all_models[best_model_name]
+        logging.info(f"Best model selected: {best_model_name}")
+
+        # Final evaluation
+        final_metrics = self.evaluate_final_model(
+            best_model, X_test, y_test, best_model_name
+        )
+
+        logging.info(f"Final metrics: {final_metrics}")
+
+        return {
+            "model": best_model,
+            "metrics": final_metrics,
+            "name": best_model_name
+        }

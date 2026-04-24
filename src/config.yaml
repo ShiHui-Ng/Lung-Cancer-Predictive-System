@@ -1,4 +1,6 @@
-file_path: 'C:\Users\gshbo\Documents\AI Materials\Lung Cancer Analysis\Lung-Cancer-Prediction\data\data_clean.csv'
+file_path: 'C:\Users\gshbo\documents\AI Materials\Python Course\ML Projects\Lung Cancer Analysis\Lung-Cancer-Prediction\src\data\cleaned_lung_cancer.db'
+model_output_path: "artifacts/lung_cancer_model.pkl"
+table_name: 'lung_cancer_cleaned'
 target_column: lung_cancer
 val_test_size: 0.2
 val_size: 0.5
